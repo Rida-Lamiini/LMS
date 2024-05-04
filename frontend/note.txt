@@ -1,0 +1,50 @@
+/src
+|-- /assets
+|   |-- /images
+|   |-- /styles
+|   |-- /fonts
+|-- /components
+|   |-- /common
+|   |   |-- Header.js
+|   |   |-- Footer.js
+|   |   |-- LoadingSpinner.js
+|   |-- /layout
+|   |   |-- Layout.js
+|   |   |-- Sidebar.js
+|   |-- /features
+|   |   |-- /BrowseCourses
+|   |   |   |-- CourseCard.js
+|   |   |   |-- CourseFilter.js
+|   |   |   |-- CourseList.js
+|   |   |-- /PurchaseCourses
+|   |   |   |-- PurchaseForm.js
+|   |   |-- /Chapters
+|   |   |   |-- ChapterItem.js
+|   |   |   |-- ChapterList.js
+|   |   |-- /Dashboard
+|   |       |-- StudentDashboard.js
+|   |       |-- TeacherDashboard.js
+|   |-- /video
+|       |-- VideoPlayer.js
+|-- /pages
+|   |-- Home.js
+|   |-- BrowseCoursesPage.js
+|   |-- PurchaseCoursesPage.js
+|   |-- DashboardPage.js
+|   |-- ChapterPage.js
+|   |-- CreateCoursePage.js
+|   |-- CreateChapterPage.js
+|   |-- LoginPage.js
+|   |-- RegisterPage.js
+|-- /services
+|   |-- /api
+|   |   |-- courseService.js
+|   |   |-- chapterService.js
+|   |-- /auth
+|       |-- authService.js
+|-- /utils
+|   |-- dragAndDrop.js
+|   |-- uploadThing.js
+|-- App.js
+|-- index.js
+|-- index.css
