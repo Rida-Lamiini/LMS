@@ -6,10 +6,12 @@ export  function Courses() {
     <div>
         <Link to="/admin/create">
         <button className='primary'>create</button>
-        <Outlet/>
 
 
         </Link>
+        <Outlet/>
+
     </div>
+
   )
 }

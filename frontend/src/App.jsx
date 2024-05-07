@@ -9,6 +9,7 @@ import { Dashboard } from "./pages/student/Dashboard";
 import { Courses } from "./pages/teacher/Courses";
 import { Analytics } from "./pages/teacher/Analytics";
 import { CreateCourse } from "./pages/teacher/CreateCourse";
+import { CourseEdit } from "./pages/teacher/coursePages/CourseEdit";
 
 function App() {
   return (
@@ -17,9 +18,15 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/admin" element={<Admin />}>
-          <Route path="courses" element={<Courses />} />
+        <Route path="courses" element={<Courses />}  />
+
+           {/* Route with parameter id */} 
+           <Route  path="create" element={<CreateCourse />} />
+
+          <Route path=":id" element={<CourseEdit />} />
+
+         
           <Route path="analytics" element={<Analytics />} />
-          <Route  path="create" element={<CreateCourse />} />
         </Route>
         <Route path="/student" element={<Student />}>
           <Route path="browse" element={<Browse />} />
