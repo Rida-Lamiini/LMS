@@ -22,7 +22,9 @@ export function CreateCourse() {
         try {
             const response = await axios.post('http://localhost:8080/courses/create', course);
             console.log('Course added:', response.data);
-            navigate(`/admin/${response.data.courseId}` , {state : {course}}); // Navigate to the edit page with course ID
+            const courseId = response.data.courseId;
+
+            navigate(`/admin/${courseId}`, { state: { course: response.data, courseId: response.data.courseId }});
 
         } catch (error) {
             console.error('Error adding course:', error);

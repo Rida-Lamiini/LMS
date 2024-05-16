@@ -23,4 +23,6 @@ public class Category {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_ctg_id",referencedColumnName = "category_id")
     private List<Course> courseList;
+
+
 }

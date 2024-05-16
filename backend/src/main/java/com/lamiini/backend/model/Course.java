@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "course")
@@ -54,6 +55,13 @@ public class Course {
     @ManyToOne
     @JoinColumn(name = "fk_ctg_id")
     private Category category;
+
+
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_crs_id",referencedColumnName = "course_id")
+    private List<Attachment> attachments;
+
 
 
 }

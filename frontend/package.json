@@ -11,13 +11,22 @@
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.7",
+    "@udecode/plate-alignment": "^33.0.0",
+    "@udecode/plate-basic-elements": "^33.0.2",
+    "@udecode/plate-common": "^33.0.0",
+    "@uploadcare/blocks": "0.39.0",
+    "@uploadcare/rest-client": "^6.14.1",
     "axios": "^1.6.8",
     "firebase": "^10.11.1",
     "lucide-react": "^0.378.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.0",
-    "react-toastify": "^10.0.5"
+    "react-toastify": "^10.0.5",
+    "slate": "^0.103.0",
+    "slate-history": "^0.100.0",
+    "slate-hyperscript": "^0.100.0",
+    "slate-react": "^0.102.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
