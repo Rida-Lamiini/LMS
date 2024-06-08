@@ -1,25 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
 import * as LR from '@uploadcare/blocks';
 import "@uploadcare/blocks/web/lr-file-uploader-regular.min.css";
+import { doc, updateDoc } from 'firebase/firestore'; // Import Firestore methods
+
 import { ImageIcon } from 'lucide-react';
+import { db } from '../../../config/Firbase';
 LR.registerBlocks(LR);
 
-export function UploadImage({ courseId }) {
-  const [currentFile, setCurrentFile] = useState(null);
+export function UploadImage({ courseId , initialData}) {
+  const [currentFile, setCurrentFile] = useState(initialData);
   const [message, setMessage] = useState('');
+  console.log(initialData);
 
   useEffect(() => {
     if (currentFile) {
       updateImageUrl(currentFile.cdnUrl);
     }
+    setCurrentFile(initialData)
   }, [currentFile]);
 
   const updateImageUrl = async (url) => {
     try {
-      const response = await axios.put(`http://localhost:8080/courses/${courseId}/update-image-url`, { imageUrl: url });
-      setMessage(`Image URL updated successfully for Course ID ${courseId}`);
-      console.log('Image URL saved:', response.data);
+      const courseRef = doc(db, 'Courses', courseId); // Reference to the course document
+            await updateDoc(courseRef, { imageUrl: url }); // Update the title field in Firestore
+        console.log(url);
     } catch (error) {
       setMessage(`Error updating image URL: ${error.message}`);
       console.error('Error saving image URL:', error);
@@ -78,7 +82,7 @@ export function UploadImage({ courseId }) {
         {currentFile ? (
   <div key={currentFile.uuid}>
     <img
-      src={currentFile.cdnUrl}
+    src='https://ucarecdn.com/2cc51dd2-6ad7-4ed4-83e3-0811d82672e6/'
       alt={currentFile.fileInfo.originalFilename}
     />
   </div>
@@ -88,6 +92,7 @@ export function UploadImage({ courseId }) {
 )}
 
       </div>
+      <img src={initialData} alt="" />
     </div>
   );
 }

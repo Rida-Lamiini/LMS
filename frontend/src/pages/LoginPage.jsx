@@ -1,16 +1,13 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { auth } from "../Firbase/auth";
-
-// *****
-
-
+import { auth } from "../config/Firbase";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import logo from "../assets/logo.png";
+import googleLogo from "../assets/google-logo.jpg"; // Import Google logo
 
 export function LoginPage() {
-
-    
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   
@@ -18,32 +15,41 @@ export function LoginPage() {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      console.log("User login successful");
-      const user = auth.currentUser
-      if(user.uid == "DDOcEisrrwUw6FUaSv1My33KHpm2"){
-      window.location.href = '/admin'
-
+      toast.success("User login successful");
+      const user = auth.currentUser;
+      if (user.uid === "DDOcEisrrwUw6FUaSv1My33KHpm2") {
+        window.location.href = '/admin/courses';
+      } else {
+        window.location.href = '/student/dashboard';
       }
-      else {
-      window.location.href = '/student'
-
-      }
-
-
     } catch (error) {
-      console.log(error.message);
+      toast.error("Email or password not correct");
     }
-  }
+  };
+
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      toast.success("User login successful");
+      const user = auth.currentUser;
+      if (user.uid === "DDOcEisrrwUw6FUaSv1My33KHpm2") {
+        window.location.href = '/admin/courses';
+      } else {
+        window.location.href = '/student/dashboard';
+      }
+    } catch (error) {
+      // toast.error("Google sign-in failed");
+    }
+  };
 
   return (
     <>
-    
-      {/* <ToastContainer /> */}
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
             className="mx-auto h-10 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+            src={logo}
             alt="Your Company"
           />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -106,6 +112,17 @@ export function LoginPage() {
             </div>
           </form>
 
+          <div className="mt-6">
+            <button
+              type="button"
+              onClick={handleGoogleSignIn}
+              className="flex w-full justify-center rounded-md bg-white border border-gray-300 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm hover:bg-gray-50"
+            >
+              <img src={googleLogo} alt="Google" className="h-5 w-5 mr-2" />
+              Sign in with Google
+            </button>
+          </div>
+
           <p className="mt-10 text-center text-sm text-gray-500">
             Not a member?{' '}
             <Link to="/register" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
@@ -114,6 +131,7 @@ export function LoginPage() {
           </p>
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 }

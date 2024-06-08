@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Pencil } from 'lucide-react';
-import axios from 'axios';
-import { DropDown } from './DropDown';
+import { doc, updateDoc, getDoc, collection, getDocs } from 'firebase/firestore'; // Import Firestore methods
+import { db } from '../../../config/Firbase';
+import { DropDown } from '../DropDown';
 
-export function CategoryForm({ courseId }) { // Destructure props here
+export function CategoryForm({ courseId, initialData }) {
     const [isEditing, setIsEditing] = useState(false);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -13,15 +14,33 @@ export function CategoryForm({ courseId }) { // Destructure props here
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/categories');
-                setCategories(response.data);
+                // Fetch course document to get the category reference
+                const courseDoc = await getDoc(doc(db, 'Courses', courseId));
+                const courseData = courseDoc.data();
+                
+                if (courseData && courseData.categoryRef) {
+                    const categoryDoc = await getDoc(courseData.categoryRef);
+                    if (categoryDoc.exists()) {
+                        setSelectedCategory({ id: categoryDoc.id, ...categoryDoc.data() });
+                    } else {
+                        console.error('Category data not found');
+                    }
+                }
+
+                // Fetch all categories for the dropdown
+                const querySnapshot = await getDocs(collection(db, 'categories'));
+                const fetchedCategories = querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                setCategories(fetchedCategories);
             } catch (error) {
                 console.error('Error fetching categories:', error);
             }
         };
 
         fetchData();
-    }, []);
+    }, [courseId]);
 
     const handleCategorySelect = (category) => {
         setSelectedCategory(category);
@@ -36,12 +55,15 @@ export function CategoryForm({ courseId }) { // Destructure props here
         }
 
         try {
-            const response = await axios.put(`http://localhost:8080/courses/${courseId}/update-category/${selectedCategory.id}`);
+            const courseRef = doc(db, 'Courses', courseId); // Reference to the course document
+            await updateDoc(courseRef, { categoryRef: doc(db, 'categories', selectedCategory.id) }); // Update the categoryRef field in Firestore
 
-            console.log('Category saved:', response.data);
+            await updateDoc(courseRef, { categoryId: selectedCategory.id }); // Update the title field in Firestore
+
+            console.log('Category reference saved:', selectedCategory.id);
             toggleEdit();
         } catch (error) {
-            console.error('Error saving category:', error);
+            console.error('Error saving category reference:', error);
         }
     };
 

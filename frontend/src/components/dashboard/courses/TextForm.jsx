@@ -1,10 +1,15 @@
 import { Pencil } from 'lucide-react';
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { doc, updateDoc } from 'firebase/firestore'; // Import Firestore methods
+import { db } from '../../../config/Firbase';
 
 export function TextForm({ initialData, courseId }) {
     const [isEditing, setIsEditing] = useState(false);
-    const [description, setDescription] = useState(initialData);
+    const [description, setDescription] = useState(""); // Initialize description state with empty string
+
+    useEffect(() => {
+        setDescription(initialData || ""); // Set description state with initialData or empty string if initialData is null or undefined
+    }, [initialData]);
 
     const toggleEdit = () => setIsEditing((curr) => !curr);
 
@@ -16,10 +21,10 @@ export function TextForm({ initialData, courseId }) {
         e.preventDefault();
 
         try {
-            const response = await axios.put(`http://localhost:8080/courses/${courseId}/update-description`, { description });
+            const courseRef = doc(db, 'Courses', courseId); // Reference to the course document
+            await updateDoc(courseRef, { description }); // Update the description field in Firestore
 
-            setDescription(response.data.description);
-            console.log('Description saved:', response.data);
+            console.log('Description saved:', description);
 
             toggleEdit();
         } catch (error) {
@@ -56,5 +61,5 @@ export function TextForm({ initialData, courseId }) {
                 </form>
             )}
         </div>
-    )
+    );
 }

@@ -1,10 +1,16 @@
 import { Pencil } from 'lucide-react';
-import React, { useState } from 'react';
-import axios from 'axios'; // Import axios here
+import React, { useState, useEffect } from 'react';
+import { doc, updateDoc } from 'firebase/firestore'; // Import Firestore methods
+import { db } from '../../../config/Firbase';
 
 export function TitleForm({ initialData, courseId }) {
+    console.log(initialData);
     const [isEditing, setIsEditing] = useState(false);
     const [title, setTitle] = useState(initialData);
+
+    useEffect(() => {
+        setTitle(initialData); // Update title state when initialData prop changes
+    }, [initialData]);
 
     const toggleEdit = () => setIsEditing((curr) => !curr);
 
@@ -16,10 +22,10 @@ export function TitleForm({ initialData, courseId }) {
         e.preventDefault();
 
         try {
-            const response = await axios.post(`http://localhost:8080/courses/${courseId}/update-title`, { title });
+            const courseRef = doc(db, 'Courses', courseId); // Reference to the course document
+            await updateDoc(courseRef, { Title: title }); // Update the title field in Firestore
 
-            setTitle(response.data.title);
-            console.log('Title saved:', response.data);
+            console.log('Title saved:', title);
 
             toggleEdit();
         } catch (error) {
@@ -30,7 +36,7 @@ export function TitleForm({ initialData, courseId }) {
     return (
         <div className='mt-6 border bg-slate-100 rounded-md p-4'>
             <div className="font-medium flex item-center justify-between">
-                Course Title
+                Course Title 
                 <button onClick={toggleEdit} className='flex items-center'>
                     {isEditing ? (
                         <>Cancel</>
@@ -56,5 +62,5 @@ export function TitleForm({ initialData, courseId }) {
                 </form>
             )}
         </div>
-    )
+    );
 }
